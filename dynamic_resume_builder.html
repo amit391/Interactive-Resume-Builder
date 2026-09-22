@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amit Kumar</title>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --secondary: #0f766e;
+            --text-dark: #334155;
+            --text-light: #64748b;
+            --bg-light: #f1f5f9;
+            --border: #e2e8f0;
+            --accent: #2dd4bf;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, Open Sans, /*sans-serif*/;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* Editor Layout Layout */
+        .workspace {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 25px;
+        }
+
+        /* Control Panel Styles */
+        .control-panel {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            height: calc(100vh - 40px);
+            position: sticky;
+            top: 20px;
+            overflow-y: auto;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover { background-color: #0d5e57; }
+        
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: var(--primary);
+        }
+        .btn-secondary:hover { background-color: #cbd5e1; }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        input[type="text"]:focus, textarea:focus {
+            border-color: var(--secondary);
+        }
+
+        .dynamic-list-item {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 11px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        /* Resume Preview Container */
+        .preview-pane {
+            background: transparent;
+        }
+
+        /* Resume Styles (Match exactly what gets printed) */
+        .resume-template {
+            background: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: /*32% 68%;*/ 32% 68%;
+            column-gap: 1px;
+            min-height: 297mm; /* Standard A4 ratio */
+            width: 100%;
+        }
+
+        .sidebar {
+            background-color: /*var(--bg-light);*/#ffffff;
+            color: var(--text-dark);
+            padding: 40px 25px;
+        }
+
+        .profile-name {
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            outline: none;
+        }
+
+        .profile-title {
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            color:var(--secondary);/* #94a3b8;*/
+        }
+
+        .contact-item {
+            margin-bottom: 5px;
+            font-size: 13.5px;
+            line-height: 1;
+        }
+
+        .contact-item span {
+            display: block;
+            color: /*#94a3b8;var(--accent);*/ var(--secondary);
+            font-size: 11px;
+            text-transform: uppercase;
+            line-height: 1.1;       /* 3. 👈 Keeps the label tightly positioned over its value */
+            margin-bottom: 0px;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1px;
+            margin-top: 0px;
+        } 
+
+
+    
+
+        .skill-tag {
+            font-size: 12px;
+            background: var(--bg-light);
+            padding: 1px 3px;
+            border-radius: 1px;
+            line-height: 1.1;
+        }
+
+        .main-content {
+            padding: 40px;
+            background: #ffffff;
+        }
+
+        .summary-box {
+            font-size: 14.5px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            text-align: justify;
+            outline: none;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 4px;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item {
+            margin-bottom: 10px;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0px;
+        }
+        .timeline-header h4 {
+            margin: 0; 
+        }
+        .timeline-header span {
+            font-size: 13px; /* 👈 Set this smaller (original was likely 14px or 12.5px) */
+            font-weight: 500;
+            color: var(--secondary);
+            }
+
+            
+
+        .job-title, .degree-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .company-name, .institution-name {
+            font-size: 14px;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .date-loc {
+            font-size: 12.5px;
+            color: var(--text-light);
+            text-align: right;
+            white-space: nowrap;
+            line-height: 5;
+        }
+
+        .timeline-body {
+            font-size: 13.5px;
+            color: var(--text-dark);
+            padding-left: 15px;
+            margin-top: 0px; 
+        }
+
+        .timeline-body li {
+            margin-bottom: 2px;
+            line-height: 1.5;
+        }
+
+        .edu-meta {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-top: 0px;
+            line-height: 1; /* 👈 Pulls text lines tightly together if it wraps */
+            padding: 0;
+        }
+
+        /* Printable setup optimization */
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .control-panel {
+                display: none;
+            }
+            .workspace {
+                display: block;
+                max-width: 100%;
+            }
+            .resume-template {
+                box-shadow: none;
+                border-radius: 0;
+                page-break-inside: avoid;
+            }
+        }
+        @media print {
+            @page {
+                size: auto;
+                margin: 0mm; /* Setting margin to 0 hides browser-generated title and date */
+                }
+            body {
+                margin: 1cm; /* Re-add margin to the body so content doesn't touch the edge */
+                }
+        }
+       /* @media print {
+           .sidebar {
+               background-color:  #2c3e50 !important; Replace with your sidebar color 
+               color: #ffffff !important;            Replace with your text color 
+    
+              Forces browsers to render background colors and images 
+               -webkit-print-color-adjust: exact; 
+               print-color-adjust: exact;
+            }
+        }*/
+        @media print {
+            #view-website {
+                /* Forces standard colors and prevents the browser from dropping font details */
+                color: #000000 !important; 
+                text-decoration: underline !important;
+                /* Tells the browser's graphics layer to preserve rendering priorities */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        
+        @media (max-width: 900px) {
+            .workspace {
+                grid-template-columns: 100%;
+            }
+            .control-panel {
+                height: auto;
+                position: relative;
+                top: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="workspace">
+        
+        <!-- SIDE CONTROL PANEL (FOR LIVE UPDATES) -->
+        <aside class="control-panel">
+            <div class="panel-title">
+                <span>Resume Builder</span>
+            </div>
+            
+            <button class="btn" onclick="window.print()">🖨️ Print / Save PDF</button>
+
+            <!-- Basics Form -->
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="input-name" value="Amit Kumar" oninput="updateBasics()">
+            </div>
+            <div class="form-group">
+                <label>Job Title</label>
+                <input type="text" id="input-title" value="Embedded Systems Engineer" oninput="updateBasics()">
+            </div>
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="text" id="input-phone" value="07678604618" oninput="updateBasics()">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" id="input-email" value="amitsit2k11@gmail.com" oninput="updateBasics()">
+            </div>
+            <div class="form-group">
+                <label>LinkedIn</label>
+                <input type="text" id="input-linkedin" value="linkedin.com/in/amit-kumar-3890088" oninput="updateBasics()">
+            </div>
+            <div class="form-group">
+                <label> 
+                    Website/Github
+                    <!-- The clickable link targeting your input value -->
+                    <a id="link-website" href="https://github.com/amit391" target="_blank" style="margin-left: 10px; font-size: 0.9em; color: #0066cc;">🌐 Visit Link</a>
+                </label>
+                <input type="text" id="input-website" value="https://github.com/amit391" oninput="updateBasics()">
+            </div>
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="input-location" value="Nabinagar, Bihar, 824301" oninput="updateBasics()">
+            </div>
+            <div class="form-group">
+                <label>Professional Summary</label>
+                <textarea id="input-summary" rows="5" oninput="updateBasics()">Highly accomplished Embedded Systems Engineer with over 6 years of experience in developing and implementing embedded firmware and hardware solutions. Proven ability to design, develop, and test embedded systems from concept to production for various industries, including automotive, consumer electronics, and medical devices.</textarea>
+            </div>
+
+            <!-- Skills Dynamic Input -->
+            <div class="form-group">
+                <label style="margin-bottom:2px;">Skills (Comma Separated)</label>
+                <textarea id="input-skills" rows="3" oninput="renderSkills()">C / C++ Programming, Embedded C, RTOS, Embedded System Design, SPI, I2C, UART, Testing & Debugging, Troubleshooting, Git / SVN, AI & Machine Learning, Python, PyTorch, HTML, Css, Vanilla Java-script</textarea>
+            </div>
+
+            <!-- Experience Manager -->
+            <div style="margin-top:25px; margin-bottom:10px;">
+                <label style="font-size:14px; color:var(--primary);">Work Experience</label>
+                <div id="experience-form-list"></div>
+                <button type="button" class="btn btn-secondary" onclick="addExperienceStructure()">+ Add Experience</button>
+            </div>
+
+            <!-- Education Manager -->
+            <div style="margin-top:25px; margin-bottom:10px;">
+                <label style="font-size:14px; color:var(--primary);">Education</label>
+                <div id="education-form-list"></div>
+                <button type="button" class="btn btn-secondary" onclick="addEducationStructure()">+ Add Education</button>
+            </div>
+        </aside>
+
+        <!-- LIVE PREVIEW RENDER PANEL -->
+        <main class="preview-pane">
+            <div class="resume-template" id="resume-document">
+                
+                <!-- PREVIEW LEFT COLUMN -->
+                <div class="sidebar">
+                    <h1 class="profile-name" id="view-name">Amit Kumar</h1>
+                    <p class="profile-title" id="view-title">Embedded Systems Engineer</p>
+
+                    <div class="sidebar-section">
+                        <h2 class="sidebar-title">Contact</h2>
+                        <div class="contact-item"><span>Phone</span><div id="view-phone">07678604618</div></div>
+                        <div class="contact-item"><span>Email</span><div id="view-email">amitsit2k11@gmail.com</div></div>
+                        <!--<div class="contact-item"><span>LinkedIn</span><div id="view-linkedin">linkedin.com/in/amit-kumar-3890088</div></div> -->
+                        <!-- <div class="contact-item"><span>website</span><div id="view-website">https://github.com/amit391/</div></div> -->
+                        <div class="contact-item">
+                            <span>LinkedIn</span>
+                                <!-- Changed from <div> to <a> -->
+                                <a id="view-linkedin" href="https://linkedin.com" target="_blank" rel="noopener noreferrer">linkedin.com/in/amit-kumar-3890088</a>
+                        </div>
+                        <div class="contact-item"><span>website</span>
+                            <a id="view-website" href="https://github.com/amit391/" target="_blank" rel="noopener noreferrer">https://github.com/amit391/</a>
+                        </div>
+                        
+                        <div class="contact-item"><span>Location</span><div id="view-location">Nabinagar, Bihar, 824301</div></div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h2 class="sidebar-title">Skills</h2>
+                        <div class="skills-container" id="view-skills">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h2 class="sidebar-title">Education</h2>
+                        <div id="view-education">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- PREVIEW RIGHT COLUMN -->
+                <div class="main-content">
+                    <h2 class="section-title">Summary</h2>
+                    <div class="summary-box" id="view-summary"></div>
+
+                    <section style="margin-bottom: 30px;">
+                        <h2 class="section-title">Experience</h2>
+                        <div id="view-experience">
+                            <!-- Populated by JS -->
+                        </div>
+                    </section>
+
+                    <!-- <section>
+                        <h2 class="section-title">Education</h2>
+                        <div id="view-education">
+                            <!-- Populated by JS -->
+                        </div>
+                    </section> -->
+
+                   
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        // Core initial datasets modeled directly from your resume
+        let experienceData = [
+            {
+                role: "AI & ML Python Work",
+                //company: "Freelance Work (Git Repo)",
+                company: 'Freelance Work (<a href="https://github.com/amit391" target="_blank" rel="noopener noreferrer">Git Repo</a>)',
+                
+                duration: "Apr 2024 - continue.",
+                loc: "Remote",
+                //bullets: `Built a market trend prediction and recommendation system.Utilized Python and PyTorch frameworks for core development.
+                  //      \nReal Time Object detection using Yolov5.\nMulti Camera AI Surveillance System Flask YOLOv8\n360 Panorama Photo Stitcher Viewer
+                    //    \nReal Time Video Streaming Chat Server using haarcascade_frontalface`
+              
+               bullets: [
+                    {
+                     text: "Built a market trend prediction and recommendation system using Python and PyTorch.",
+                     link: "https://github.com/amit391/Market-trend-prediction"
+                    },
+                    {
+                    text: "Developed a real-time object detection application using the YOLOv5 framework.",
+                    link: "https://github.com/amit391/Real-Time-Object-detection-using-Yolov5"
+                    },
+                    {
+                    text: "Designed a multi-camera AI surveillance system integrated with Flask and YOLOv8.",
+                    link: "https://github.com/amit391/Multi-Camera-AI-Surveillance-System-Flask-YOLOv8-"
+                    },
+                    {
+                    text: "Created a 360-degree panorama photo stitcher and interactive viewer application.",
+                    link: "https://github.com/amit391/360-Panorama-Photo-Stitcher-Viewer" // Base profile used as fallback for this bullet
+                    },
+                    {
+                    text: "Implemented a real-time video streaming chat server utilizing haarcascade_frontalface.",
+                    link: "https://github.com/amit391/Real-Time-Video-Streaming-Chat-Server"
+                    }
+                ]
+            },
+             
+            
+            {
+                role: "Technical Trainer",
+                company: "Teaching & Professional Training",
+                duration: "Sep 2021 - Mar 2024",
+                loc: "Nabinagar, Bihar",
+                bullets: "Provided comprehensive training to students in C/C++ and embedded programming."
+            },
+            {
+                role: "Embedded Systems Engineer",
+                company: "Multivirt Pvt. Ltd.",
+                duration: "Sep 2017 - Apr 2020",
+                loc: "New Delhi",
+                bullets: "Worked with embedded development tools including IDEs, debuggers, and simulators to streamline development.\nConfigured Wi-Fi hotspots on Raspberry Pi 3 platforms using TP-Link wireless adapters.\nImplemented robust multi-layer data encryption and decryption modules.\nAuthored comprehensive technical documentation, design specifications, and user manuals."
+            },
+            {
+                role: "Embedded Trainee",
+                company: "Cetpa Infotech Pvt. Ltd.",
+                duration: "Mar 2017 - Nov 2017",
+                loc: "Noida",
+                bullets: "Completed intensive certification modules covering Embedded Tools, Embedded C, and Linux Internals.\nGained hands-on development exposure across hardware architectures including ARM (LPC2148), AVR, Arduino Uno, and ESP32 platforms."
+            }
+        ];
+
+        let educationData = [
+            {
+                degree: "Bachelor of Technology (B.Tech)",
+                school: "Silicon Institute of Technology (BPUT)",
+                timeline: "Graduated: 2015",
+                details: "Electronics and Communication Engineering | CGPA: 7.2"
+            },
+            {
+                degree: "Intermediate (Class XII)",
+                school: "J.M. College Bhurkunda (JAC Board)",
+                timeline: "Passed: 2009",
+                details: "PCM Stream | Percentage: 60%"
+            },
+            {
+                degree: "Matriculation (Class X)",
+                school: "Bhurkunda High School (JAC Board)",
+                timeline: "Passed: 2007",
+                details: "Percentage: 67%"
+            }
+        ];
+
+        // Sync inputs with text views directly
+        function updateBasics() {
+            document.getElementById('view-name').innerText = document.getElementById('input-name').value;
+            document.getElementById('view-title').innerText = document.getElementById('input-title').value;
+            document.getElementById('view-phone').innerText = document.getElementById('input-phone').value;
+            document.getElementById('view-email').innerText = document.getElementById('input-email').value;
+            document.getElementById('view-linkedin').innerText = document.getElementById('input-linkedin').value;
+            document.getElementById('view-website').innerText = document.getElementById('input-website').value;
+            
+            document.getElementById('view-location').innerText = document.getElementById('input-location').value;
+            document.getElementById('view-summary').innerText = document.getElementById('input-summary').value;
+        }
+
+        // Parse and render skills items split by dynamic delimiter arrays
+        function renderSkills() {
+            const container = document.getElementById('view-skills');
+            const txt = document.getElementById('input-skills').value;
+            container.innerHTML = '';
+            txt.split(',').forEach(skill => {
+                let trimmed = skill.trim();
+                if(trimmed.length > 0) {
+                    let span = document.createElement('span');
+                    span.className = 'skill-tag';
+                    span.innerText = trimmed;
+                    container.appendChild(span);
+                }
+            });
+        }
+
+       
+     
+        // 1. Renders the editable input boxes (Only called when adding or removing entries)
+        // 1. Renders the editable input boxes (Handles both raw text and complex links arrays)
+        function renderExperienceForm() {
+            const formList = document.getElementById('experience-form-list');
+            formList.innerHTML = '';
+
+            experienceData.forEach((exp, index) => {
+                // Flatten structural text if bullets are organized as an array of objects
+                let bulletTextValue = "";
+                if (Array.isArray(exp.bullets)) {
+                    bulletTextValue = exp.bullets.map(b => b.text).join('\n');
+                } else {
+                    bulletTextValue = exp.bullets || "";
+                }
+
+                let fDiv = document.createElement('div');
+                fDiv.className = 'dynamic-list-item';
+                fDiv.innerHTML = `
+                    <button class="remove-btn" type="button" onclick="removeExp(${index})">X</button>
+                    <input type="text" data-index="${index}" data-field="role" value="${exp.role}" placeholder="Role" oninput="editExp(${index}, 'role', this.value)" style="margin-bottom:5px; font-weight:bold;">
+                    <input type="text" data-index="${index}" data-field="company" value="${exp.company.replace(/"/g, '&quot;')}" placeholder="Company" oninput="editExp(${index}, 'company', this.value)" style="margin-bottom:5px;">
+                    <input type="text" data-index="${index}" data-field="duration" value="${exp.duration}" placeholder="Dates" oninput="editExp(${index}, 'duration', this.value)" style="margin-bottom:5px; width:48%; display:inline-block;">
+                    <input type="text" data-index="${index}" data-field="loc" value="${exp.loc}" placeholder="Location" oninput="editExp(${index}, 'loc', this.value)" style="margin-bottom:5px; width:49%; display:inline-block;">
+                    <textarea data-index="${index}" data-field="bullets" placeholder="Bullet points (use New Line per bullet)" oninput="editExp(${index}, 'bullets', this.value)" rows="3">${bulletTextValue}</textarea>
+                `;
+                formList.appendChild(fDiv);
+            });
+        }
+
+        // 2. Renders only the Document Preview Layout (Safe to run on every keypress)
+        function renderExperienceView() {
+            const viewList = document.getElementById('view-experience');
+            viewList.innerHTML = '';
+
+            experienceData.forEach((exp) => {
+                let vDiv = document.createElement('div');
+                vDiv.className = 'timeline-item';
+                
+                let listItemsHTML = '';
+                
+                // Dynamically iterate over modern link arrays or traditional text blocks
+                if (Array.isArray(exp.bullets)) {
+                    listItemsHTML = exp.bullets.map(b => `
+                        <li>
+                            ${b.text} 
+                            <a href="${b.link}" target="_blank" rel="noopener noreferrer" style="margin-left:5px; font-size:0.85em; color:#0066cc;">[Code]</a>
+                        </li>
+                    `).join('');
+                } else if (typeof exp.bullets === 'string') {
+                    listItemsHTML = exp.bullets.split('\n')
+                        .map(b => b.trim())
+                        .filter(b => b.length > 0)
+                        .map(b => `<li>${b}</li>`)
+                        .join('');
+                }
+
+                vDiv.innerHTML = `
+                    <div class="timeline-header">
+                        <h4>${exp.role}</h4>
+                        <span>${exp.duration}</span>
+                    </div>
+                    <div class="timeline-sub">
+                        <span class="company-name">${exp.company}</span>
+                         
+                        <span>${exp.loc}</span>
+                    </div>
+                    <ul class="timeline-body">${listItemsHTML}</ul>
+                `;
+                viewList.appendChild(vDiv);
+            });
+        }
+        // 3. Updated Action Handlers
+        function addExperienceStructure() {
+            experienceData.push({role: '', company: '', duration: '', loc: '', bullets: ''});
+            renderExperienceForm(); // Re-build form with the new record
+            renderExperienceView(); // Update preview panel
+            
+        }
+
+        function editExp(index, field, val) {
+            experienceData[index][field] = val;
+            renderExperienceView(); // 🚀 Only updates the preview! The input DOM remains untouched, keeping your cursor intact.
+        }
+
+        function removeExp(index) {
+            experienceData.splice(index, 1);
+            renderExperienceForm(); // Re-build layout without deleted record
+            renderExperienceView(); // Update preview panel
+        }
+
+        // Initial initialization call when the page mounts
+        function init() {
+            renderExperienceForm();
+            renderExperienceView();
+        }
+
+       
+        function renderEducationForm() {
+            const formList = document.getElementById('education-form-list');
+            formList.innerHTML = '';
+
+            educationData.forEach((edu, index) => {
+                let fDiv = document.createElement('div');
+                fDiv.className = 'dynamic-list-item';
+                fDiv.innerHTML = `
+                    <button class="remove-btn" type="button" onclick="removeEdu(${index})">X</button>
+                    <input type="text" value="${edu.degree}" placeholder="Degree" oninput="editEdu(${index}, 'degree', this.value)" style="margin-bottom:5px; font-weight:bold;">
+                    <input type="text" value="${edu.school}" placeholder="School" oninput="editEdu(${index}, 'school', this.value)" style="margin-bottom:5px;">
+                    <input type="text" value="${edu.timeline}" placeholder="Timeline" oninput="editEdu(${index}, 'timeline', this.value)" style="margin-bottom:5px; width:48%; display:inline-block;">
+                    <input type="text" value="${edu.details}" placeholder="Details / Grade" oninput="editEdu(${index}, 'details', this.value)" style="margin-bottom:5px; width:49%; display:inline-block;">
+                `;
+                formList.appendChild(fDiv);
+            });
+        }
+
+        // 2. Renders only the Document Preview layout (Safe to run on every single keypress)
+        function renderEducationView() {
+            const viewList = document.getElementById('view-education');
+            viewList.innerHTML = '';
+
+            educationData.forEach((edu) => {
+                let vDiv = document.createElement('div');
+                vDiv.className = 'timeline-item';
+                vDiv.innerHTML = `
+                    <div class="timeline-header">
+                        <div>
+                            <div class="degree-title">${edu.degree || ''}</div>
+                            <div class="institution-name">${edu.school || ''}</div>
+                        </div>
+                        <div class="date-loc">
+                            <div>${edu.timeline || ''}</div>
+                        </div>
+                    </div>
+                    <div class="edu-meta">${edu.details || ''}</div>
+                `;
+                viewList.appendChild(vDiv);
+            });
+        }
+         
+        
+        // 3. Updated Action Pipelines
+        function addEducationStructure() {
+            educationData.push({degree: '', school: '', timeline: '', details: ''});
+            renderEducationForm(); // Appends structural blocks smoothly
+            renderEducationView();
+        }
+
+        function editEdu(index, field, val) {
+            educationData[index][field] = val;
+            renderEducationView(); // 🚀 Only updates the display print layout. Inputs are untouched!
+        }
+
+        function removeEdu(index) {
+            educationData.splice(index, 1);
+            renderEducationForm(); // Re-index form tracking elements smoothly
+            renderEducationView();
+        }
+
+        // Primary initialization loop execution on container asset load state
+        window.onload = function() {
+            updateBasics();
+            renderSkills();
+            renderExperience();
+            renderEducation();
+
+        };
+        document.addEventListener("DOMContentLoaded", () => {
+            renderExperienceForm();
+            renderExperienceView();
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            renderExperienceForm();
+            renderExperienceView();
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            renderEducationForm();
+            renderEducationView();
+        });
+        document.getElementById('print-btn').addEventListener('click', () => {
+            window.print();
+        });
+    </script>
+</body>
+</html>
